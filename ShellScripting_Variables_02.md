@@ -311,20 +311,21 @@ Satya 25
 ---
 
 ##  Reading Input with Timeout
-
 ```bash
 #!/bin/bash
 
-# Prompt user for input with a timeout
+# Read user input with a timeout of 10 seconds
 read -t 10 -p "Enter password: " password
-# Waits for 10 seconds before timing out.
+
+echo
+
+# Check if the user entered a value
 if [ -z "$password" ]; then
     echo "No password entered within 10 seconds."
 else
     echo "Password entered: $password"
 fi
 ```
-
 ---
 
 ##  Reading Input Silently (Password Input - Secure)
@@ -332,11 +333,11 @@ fi
 ```bash
 #!/bin/bash
 
-# Prompt user for password input (silent)
+# Read password without displaying characters on the screen
 read -s -p "Enter your password: " password
-echo    # Moves to the next line
 
-echo "Password entered."
+echo
+echo "Password entered successfully."
 ```
 ---
 # Real-Time DevOps Example
