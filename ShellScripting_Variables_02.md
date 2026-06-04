@@ -327,6 +327,13 @@ else
 fi
 ```
 ---
+# What is -z in shell scripting?
+
+
+-z is a string test operator that checks whether a variable is empty or has zero length. It is commonly used to validate user input and detect missing values in shell scripts.
+
+
+---
 
 ##  Reading Input Silently (Password Input - Secure)
 
