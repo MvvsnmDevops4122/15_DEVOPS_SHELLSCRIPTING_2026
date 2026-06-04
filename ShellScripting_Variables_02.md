@@ -1,12 +1,36 @@
 # Variables in Shell Scripting
 
-Variables are used to store data or values that can be referenced and manipulated throughout the script.
+* Variables are used to store data or values that can be accessed and manipulated throughout a shell script.
+
+### Syntax
+
+```bash
+variable_name=value
+```
+
+### Example
+
+```bash
+name="Satya"
+age=25
+
+echo $name
+echo $age
+```
+
+Output:
+
+```bash
+Satya
+25
+```
 
 ---
 
 ## Variable Naming and Assignment
 
 ### Variable Naming Rules
+
 - Variable names can contain letters (`a-z`, `A-Z`), digits (`0-9`), and underscores (`_`).
 - They **must start** with a letter or an underscore.
 - Variable names are **case-sensitive** (`myVar` ≠ `MYVAR`).
@@ -51,7 +75,19 @@ echo "$greeting, $target!"
 
 ### 1. Environment Variables (System Defined Variables)
 
-These are inherited from the shell environment or exported using `export`.
+* System-defined variables available to the current shell and child processes.
+
+### Common Environment Variables
+
+```bash
+echo $USER
+echo $HOME
+echo $PATH
+echo $SHELL
+echo $PWD
+```
+
+### View All Environment Variables
 
 ```bash
 env
@@ -64,30 +100,37 @@ Example:
 echo "Current user: $USER"
 ```
 
-#### `export`
-
-Used to override or set environment variables.
+### Setting Environment Variables
 
 ```bash
-echo $HISTSIZE
-export HISTSIZE=300
-echo $HISTSIZE
+export NAME="Satya"
+
+echo $NAME
 ```
 
-**Note:** This change lasts only for the current session.
-
-To make it permanent:
+### Making Environment Variables Permanent
 
 ```bash
 vim ~/.bash_profile
-export HISTSIZE=300
+```
+
+Add:
+
+```bash
+export NAME="Satya"
+```
+
+Apply changes:
+
+```bash
+source ~/.bash_profile
 ```
 
 ---
 
 ### 2. Local Variables (User Defined Variables)
 
-Defined inside a script and accessible only within the script.
+* Variables created inside a script and accessible only within that script.
 
 Example:
 
@@ -105,38 +148,44 @@ echo $name
 
 ### 3. Special Variables
 
-| Variable | Meaning                              |
-| -------- | ------------------------------------ |
-| `$#`     | Number of arguments passed to script |
-| `$@`     | All arguments as separate words      |
-| `$*`     | All arguments as one string          |
-| `$$`     | Script/process ID (PID)              |
-| `$?`     | Previous command exit status         |
+* Special variables are predefined by the shell.
 
-Status Codes:
+| Variable | Description                              |
+| -------- | ---------------------------------------- |
+| `$0`     | Script name                              |
+| `$1`     | First argument                           |
+| `$2`     | Second argument                          |
+| `$#`     | Number of arguments passed to script     |
+| `$@`     | All arguments individually               |
+| `$*`     | All arguments as a single string         |
+| `$$`     | Process ID (PID)                         |
+| `$?`     | Exit status of previous command          |
 
-```text
-0     → Success
-127   → Command not found
-```
 
 ---
 
-## Naming Conventions
+# Exit Status Codes
 
-* File name max length = **255 characters**
-* File name can contain alphabets, numbers, dot (`.`), and underscore (`_`)
-* **Cannot use Linux reserved keywords**
-* Linux file system is **case-sensitive**
+Every command returns an exit status.
 
-Examples of reserved words:
+| Exit Code | Meaning           |
+| --------- | ----------------- |
+| 0         | Success           |
+| 1         | General Error     |
+| 126       | Permission Denied |
+| 127       | Command Not Found |
 
-```
-if
-fi
-for
-mkdir
+### Example
+
+```bash
 pwd
+echo $?
+```
+
+Output:
+
+```bash
+0
 ```
 
 ---
@@ -172,78 +221,103 @@ Execution:
 sh Demo.sh Prasanth reddy
 ```
 
+# Command Line Arguments
+
+Arguments passed while executing a script.
+
+### Script
+
+```bash
+#!/bin/bash
+
+echo "Script Name : $0"
+echo "First Argument : $1"
+echo "Second Argument : $2"
+```
+
+### Execution
+
+```bash
+sh demo.sh Satya DevOps
+```
+
+### Output
+
+```bash
+Script Name : demo.sh
+First Argument : Satya
+Second Argument : DevOps
+```
+
+### Accessing Arguments Greater Than 9
+
+```bash
+${10}
+${11}
+```
+
+---
+
 ### 🧾 How to Read a Value at Runtime in Shell Scripting
 
----
+# Reading User Input
 
-## 1️⃣ Read Basic Input
+## Basic Input
 
 ```bash
-#!/bin/bash
-
-# Prompt user to enter their name
-echo "Enter your name:"
 read name
 
-echo "Hello, $name! Welcome to the script."
-````
+echo "Hello $name"
+```
 
 ---
 
-## 2️⃣ Using `-p` Option for Prompt
+## Input with Prompt
 
-`read -p` allows you to display the prompt and take the input on the same line.
+# What is read -p?
+
+read = takes input from the user.
+
+-p = displays a message (prompt) before taking input.
 
 ```bash
-#!/bin/bash
-
-# Prompt user for input with a custom prompt
 read -p "Enter your age: " age
 
-echo "You entered: $age years old."
+echo $age
 ```
 
 ---
 
-## 3️⃣ Read Input One After Another (Sequential Reading)
+## Reading Multiple Inputs
 
 ```bash
-#!/bin/bash
+read name age
 
-# Reading multiple values
-echo "Please enter your name:"
-read name
-
-echo "Please enter your age:"
-read age
-
-echo "Hello, $name! You are $age years old."
+echo "$name $age"
 ```
 
----
-
-## 4️⃣ Read Multiple Values in One Line
+Input:
 
 ```bash
-#!/bin/bash
+Satya 25
+```
 
-# Reading multiple values at once
-echo "Please enter your name and Age:"
-read name age1
+Output:
 
-echo "Hello, $name! You are $age1 years old."
+```bash
+Satya 25
 ```
 
 ---
 
-## 5️⃣ Reading Input with Timeout
+##  Reading Input with Timeout
 
 ```bash
 #!/bin/bash
 
 # Prompt user for input with a timeout
-read -t 10 -p "Enter your password within 10 seconds: " password
-
+read -t 10 -p "Enter password: " password
+# Waits for 10 seconds before timing out.
 if [ -z "$password" ]; then
     echo "No password entered within 10 seconds."
 else
@@ -253,7 +327,7 @@ fi
 
 ---
 
-## 6️⃣ Reading Input Silently (Password Input - Secure)
+##  Reading Input Silently (Password Input - Secure)
 
 ```bash
 #!/bin/bash
@@ -264,3 +338,21 @@ echo    # Moves to the next line
 
 echo "Password entered."
 ```
+---
+# Real-Time DevOps Example
+
+```bash
+#!/bin/bash
+
+server_name=$(hostname)
+current_date=$(date)
+
+echo "Server Name : $server_name"
+echo "Date : $current_date"
+```
+
+### Use Case
+
+Used in monitoring, automation, backup, deployment, and reporting scripts to dynamically capture system information.
+
+---
